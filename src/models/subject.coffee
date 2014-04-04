@@ -24,7 +24,7 @@ class Subject extends BaseModel
     else
       "groups/#{@group}/"
 
-    "/projects/#{Api.current.project}/#{groupString}subjects"
+    "workflows/533cd4dd4954738018030000/subjects"
 
   @next: (done, fail) ->
     @trigger 'get-next'
@@ -59,10 +59,11 @@ class Subject extends BaseModel
     nexter.promise()
 
   @trackSeenSubject: (subject) ->
-    @seenThisSession.push subject.zooniverse_id
+    @seenThisSession.push subject.id
 
   @hasSeenSubject: (subject) ->
-    subject.zooniverse_id in @seenThisSession
+    console.log "testing ", subject, @seenThisSession
+    subject.id in @seenThisSession
 
   @fetch: (params, done, fail) ->
     [done, fail, params] = [params, done, {}] if typeof params is 'function'
@@ -77,9 +78,14 @@ class Subject extends BaseModel
       request = Api.current.get @path(), {limit}
 
       request.done (rawSubjects) =>
+        console.log "raw subjects ", rawSubjects
+
         newSubjects = for rawSubject in rawSubjects when not @hasSeenSubject(rawSubject)
           @trackSeenSubject rawSubject
+          console.log "here"
           new @ rawSubject
+
+        console.log "new subjects ", newSubjects
 
         # Keep the "seen" list a reasonable size.
         @seenThisSession.shift() until @seenThisSession.length < 1000
@@ -126,7 +132,7 @@ class Subject extends BaseModel
 
   constructor: ->
     super
-
+    console.log "Creating subject (trying)"
     @location ?= {}
     @coords ?= []
     @metadata ?= {}

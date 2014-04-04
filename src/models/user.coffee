@@ -9,7 +9,7 @@ class User extends EventEmitter
   @current: false
 
   @path: ->
-    if Api.current.project then "/projects/#{ Api.current.project }" else ''
+    ''
 
   @fetch: =>
     @trigger 'fetching', arguments
