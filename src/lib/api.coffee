@@ -17,21 +17,24 @@ class Api extends EventEmitter
     @select()
 
  
-  get: ->
-    $.getJSON arguments
+  get: (url, args)->
+    console.log "url is #{url} arguments are ", args
+    $.getJSON url, args
 
-  getJSON: ->
-    $.getJSON arguments
+  getJSON: (url,args)->
+    console.log "url is #{url} args are ", args
+    $.getJSON url, args
 
   post: ->
-    $.post arguments
+    console.log "args are ", args
+    $.post args[0], args[1..-1]
     
 
   put: ->
-    @request 'put', arguments...
+    @request 'put', args...
 
   delete: ->
-    @request 'delete', arguments...
+    @request 'delete', args...
 
   select: ->
     @trigger 'select'

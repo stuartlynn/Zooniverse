@@ -25,11 +25,7 @@
     User.current = false;
 
     User.path = function() {
-      if (Api.current.project) {
-        return "/projects/" + Api.current.project;
-      } else {
-        return '';
-      }
+      return '';
     };
 
     User.fetch = function() {
