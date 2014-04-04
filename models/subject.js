@@ -37,7 +37,7 @@
     Subject.path = function() {
       var groupString;
       groupString = !this.group ? '' : this.group === true ? 'groups/' : "groups/" + this.group + "/";
-      return "/projects/" + Api.current.project + "/" + groupString + "subjects";
+      return "workflows/533cd4dd4954738018030000/subjects";
     };
 
     Subject.next = function(done, fail) {
@@ -78,12 +78,13 @@
     };
 
     Subject.trackSeenSubject = function(subject) {
-      return this.seenThisSession.push(subject.zooniverse_id);
+      return this.seenThisSession.push(subject.id);
     };
 
     Subject.hasSeenSubject = function(subject) {
       var _ref;
-      return _ref = subject.zooniverse_id, __indexOf.call(this.seenThisSession, _ref) >= 0;
+      console.log("testing ", subject, this.seenThisSession);
+      return _ref = subject.id, __indexOf.call(this.seenThisSession, _ref) >= 0;
     };
 
     Subject.fetch = function(params, done, fail) {
@@ -104,6 +105,7 @@
         });
         request.done(function(rawSubjects) {
           var newSubjects, rawSubject;
+          console.log("raw subjects ", rawSubjects);
           newSubjects = (function() {
             var _i, _len, _results;
             _results = [];
@@ -113,10 +115,12 @@
                 continue;
               }
               this.trackSeenSubject(rawSubject);
+              console.log("here");
               _results.push(new this(rawSubject));
             }
             return _results;
           }).call(_this);
+          console.log("new subjects ", newSubjects);
           while (!(_this.seenThisSession.length < 1000)) {
             _this.seenThisSession.shift();
           }
@@ -189,6 +193,7 @@
 
     function Subject() {
       Subject.__super__.constructor.apply(this, arguments);
+      console.log("Creating subject (trying)");
       if (this.location == null) {
         this.location = {};
       }
